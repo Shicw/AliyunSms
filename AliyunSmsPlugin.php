@@ -104,11 +104,22 @@ class AliyunSmsPlugin extends Plugin
         $expire_minute = empty($expire_minute) ? 30 : $expire_minute;
         $expire_time   = time() + $expire_minute * 60;
 
-        $result = [
-            'error'     => 0,
-            'message' => '成功发送验证码',
-            'expire_time' => $expire_time
-        ];
+        //$acsResponse成功返回值中Code为'OK',失败则为错误原因字符串
+        if($acsResponse->Code == 'OK') {
+            $result = [
+                'error' => 0,
+                'message' => '成功发送验证码',
+                'expire_time' => $expire_time,
+                'response' => $acsResponse
+            ];
+        }else{
+            $result = [
+                'error' => 1,
+                'message' => '发送验证码失败',
+                'expire_time' => $expire_time,
+                'response' => $acsResponse
+            ];
+        }
         return $result;
     }
 }
